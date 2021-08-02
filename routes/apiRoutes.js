@@ -25,4 +25,24 @@ router.post('/notes', (req, res) => {
     res.send('note added');
   });
 
+  
+router.delete('/notes/:id', (req, res) => {
+    return fs.readFile( path.join(__dirname, '../db/db.json'),
+      'utf8',
+      (err, data) => {
+        if (err) 
+        throw err;
+
+        const allNotes = JSON.parse(data);
+        const afterDeleteNotes = allNotes.filter( (note) => note.id !== req.params.id );
+  
+        fs.writeFileSync(
+          path.join(__dirname, '../db/db.json'),
+          JSON.stringify(afterDeleteNotes)
+        );
+        res.json(afterDeleteNotes);
+      }
+    );
+  });
+
 module.exports = router;
